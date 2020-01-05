@@ -56,6 +56,14 @@ RUN set -x; \
 	&& apt-get install -y kubectl \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Install Python3 Kubernetes client
+RUN set -x; \
+	apt-get update \
+	&& apt-get -y install -f --no-install-recommends \
+		python3-pip \
+	&& pip3 install kubernetes \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Install rtlcss (on Debian stretch)
 RUN set -x;\
     echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
