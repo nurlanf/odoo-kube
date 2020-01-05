@@ -45,14 +45,23 @@ RUN set -x; \
         && apt-get install -y postgresql-client \
         && rm -rf /var/lib/apt/lists/*
 
+# install 'kubectl'
+RUN set -x; \
+	apt-get update && apt-get install -y apt-transport-https \
+	&& curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+	&& echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list \
+	&& apt-get update \
+	&& apt-get install -y kubectl \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Install rtlcss (on Debian buster)
 RUN set -x; \
     npm install -g rtlcss
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20191106
-ARG ODOO_SHA=b13bec4d20dfe36f1baa923719e37ea6bbe18a7d
+ARG ODOO_RELEASE=20191022
+ARG ODOO_SHA=09eb205ed1e4348dd4762263cafa9819e17dba7e
 RUN set -x; \
         curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \

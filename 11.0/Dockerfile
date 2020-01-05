@@ -47,10 +47,19 @@ RUN set -x; \
         && apt-get install -y postgresql-client \
         && rm -rf /var/lib/apt/lists/*
 
+# install 'kubectl'
+RUN set -x; \
+	apt-get update && apt-get install -y apt-transport-https \
+	&& curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+	&& echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list \
+	&& apt-get update \
+	&& apt-get install -y kubectl \
+	&& rm -rf /var/lib/apt/lists/*
+
 # Install Odoo
 ENV ODOO_VERSION 11.0
-ARG ODOO_RELEASE=20191106
-ARG ODOO_SHA=d6da6c631fb9926c4440f2016d623c37fa38d4ea
+ARG ODOO_RELEASE=20191022
+ARG ODOO_SHA=eea3333a3d7402c4ff63a09d9da145a6a4a3bab2
 RUN set -x; \
         curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
