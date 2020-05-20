@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: git-sync-odoo-kube
+spec:
+  template:
+    spec:
+      volumes:
+      - name: git-secret
+        secret:
+          secretName: git-creds
+          defaultMode: 256
+      containers:
+      - name: git-sync-enterprise
+        image: k8s.gcr.io/git-sync:v3.1.1
+        env:
+        - name: GIT_REPO
+          value: git@github.com:nurlanf/odoo-kube.git
+        - name: GIT_BRANCH
+          value: master
+        - name: COMMIT_USER_NAME
+          value: git-sync
+        - name: COMMIT_USER_EMAIL
+          value: admin@exrp.pl
+        command:
+        - sh
+        - -c
+        - |
+          set -x
+
+          mkdir ~/.ssh
+          cat << EOF > ~/.ssh/config
+          host github.com
+            HostName github.com
+            IdentityFile /etc/git-secret/ssh
+            UserKnownHostsFile /etc/git-secret/known_hosts
+            User git
+          EOF
+          chmod 600 ~/.ssh/config 
+          git config --global user.name ${COMMIT_USER_NAME}
+          git config --global user.email ${COMMIT_USER_EMAIL}
+          # Download update script
+          wget https://raw.githubusercontent.com/nurlanf/odoo-kube/master/update_releases.sh
+          # Run script
+          sh ./update_releases.sh
+        securityContext:
+          runAsUser: 65533 # git-sync user
+        volumeMounts:
+        - name: git-secret
+          mountPath: /etc/git-secret
+      securityContext:
+        fsGroup: 65533 # to make SSH key readable
+      restartPolicy: Never

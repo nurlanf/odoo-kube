@@ -1,9 +1,8 @@
 #/bin/bash
-set -x
 
 export TEMP_DIR=/tmp/temp_dir
-rm -rf $TEMP_DIR
-mkdir -p $TEMP_DIR
+rm -vrf $TEMP_DIR
+mkdir -v -p $TEMP_DIR
 
 function main(){
     cd $TEMP_DIR
