@@ -55,12 +55,15 @@ RUN set -x; \
 	&& apt-get install -y kubectl \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install Python3 Kubernetes client
+# Install additional Python3 libraries
 RUN set -x; \
 	apt-get update \
 	&& apt-get -y install -f --no-install-recommends \
 		python3-pip \
+        # Python3 Kubernetes Client
 	&& pip3 install kubernetes \
+        # Python3 firebase_admin library
+        && pip3 install firebase_admin \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install rtlcss (on Debian buster)
