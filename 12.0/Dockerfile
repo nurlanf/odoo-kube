@@ -62,6 +62,8 @@ RUN set -x; \
 	apt-get update \
 	&& apt-get -y install -f --no-install-recommends \
 		python3-pip \
+        && pip3 install --upgrade pip \
+        && pip3 install --upgrade setuptools \
         # Python3 Kubernetes Client
 	&& pip3 install kubernetes \
         # Python3 firebase_admin library
