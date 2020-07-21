@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    meta.helm.sh/release-name: dosttech-dev
+    meta.helm.sh/release-namespace: default
+    nginx.ingress.kubernetes.io/proxy-body-size: 3M
+  creationTimestamp: null
+  generation: 1
+  labels:
+    app: odoo
+    app.kubernetes.io/managed-by: Helm
+    chart: odoo-1.0.0
+    heritage: Helm
+    release: dosttech-dev
+  name: dosttech-dev-odoo
+  selfLink: /apis/extensions/v1beta1/namespaces/default/ingresses/dosttech-dev-odoo
+spec:
+  rules:
+  - host: dosttech-emanat.dev.erpgo.az
+    http:
+      paths:
+      - backend:
+          serviceName: dosttech-dev-odoo
+          servicePort: http
+        path: /
+      - backend:
+          serviceName: dosttech-dev-odoo
+          servicePort: 8888
+        path: /jupyter(/|$)(.*)
+  tls:
+  - hosts:
+    - dosttech-emanat.dev.erpgo.az
+    secretName: dosttech-dev
+status:
+  loadBalancer: {}

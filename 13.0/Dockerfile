@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM marketplace.gcr.io/google/debian10
 MAINTAINER Odoo S.A. <info@odoo.com>
 
 # Generate locale C.UTF-8 for postgres and general locale data
@@ -84,6 +84,11 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
+# RUN set -x; \
+#         # Fix Werkzeug
+#         pip3 uninstall -y Werkzeug \
+#         && pip3 install werkzeug==0.11.15
+
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
@@ -102,7 +107,6 @@ ENV ODOO_RC /etc/odoo/odoo.conf
 
 COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
-# Set default user when running the container
 USER odoo
 
 ENTRYPOINT ["/entrypoint.sh"]
