@@ -66,6 +66,7 @@ RUN set -x; \
 	&& pip3 install kubernetes \
         # Python3 firebase_admin library
         && pip3 install firebase_admin \
+        && pip3 install pyjwt \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install rtlcss (on Debian buster)
